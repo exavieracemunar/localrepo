@@ -6,8 +6,7 @@
               croncmd="/usr/bin/bash /automatic-backup.sh"
               cronjob="*/5 * * * * $croncmd"
 
-
-										# s=$(service crond start)
+									 # s=$(service crond start)
                    c=$(crontab-l | grep -v -F "$croncmd" ; echo "$cronjob" | crontab - )
 
                 }
@@ -20,7 +19,7 @@
 
 			$(tar cvf /opt/dump-backup.tar /opt/dump-backup) #Archive the folder dump-backup
 
-#backup
+			#backup
 			setbackup(){
 				#set dir with date and time stamp
 				TIMEDATE=$(date +%b-%d-%Y-%T)
