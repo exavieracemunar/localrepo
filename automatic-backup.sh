@@ -8,7 +8,7 @@
 
 
 										# s=$(service crond start)
-                   c=$(cd /etc/crontab | grep -v -F "$croncmd" ; echo "$cronjob" | crontab - )
+                   c=$(crontab-l | grep -v -F "$croncmd" ; echo "$cronjob" | crontab - )
 
                 }
 								set
