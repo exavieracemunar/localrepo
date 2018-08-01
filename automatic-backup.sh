@@ -31,7 +31,7 @@
 		    setbackup #calls the backup
 			#notif email
 			sm=$(echo -e 'Subject: DB_Backup\n\nYour database have been backup successfully.' | ssmtp -v toro.exavierace.munar@gmail.com)
-		echo "Success."
+			echo "Success."
 			else
 			echo "Failed."
 	fi
