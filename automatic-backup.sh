@@ -8,7 +8,7 @@
                croncmd="/usr/bin/bash /usr/bin/automatic-backup.sh"
                cronjob="*/5 * * * * $croncmd"
 
-	       s=$(service crond start)
+	             s=$(service crond start)
                c=$(crontab -l | grep -v -F "$croncmd" ; echo -e "$mail\n$path\n$cronjob" | crontab - )
 
            }
