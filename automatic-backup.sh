@@ -3,18 +3,18 @@
 		#5 minutes interval
 
 		set(){
-	       mail="MAILTO="
-	       path="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
+							 mail="MAILTO="
+							 path="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
                croncmd="/usr/bin/bash /usr/bin/automatic-backup.sh"
                cronjob="*/5 * * * * $croncmd"
 
-		# s=$(service crond start)
-                c=$(crontab -l | grep -v -F "$croncmd" ; echo -e "$mail\n$path\n$cronjob" | crontab - )
+	       s=$(service crond start)
+               c=$(crontab -l | grep -v -F "$croncmd" ; echo -e "$mail\n$path\n$cronjob" | crontab - )
 
            }
-	set
+	       set
 
-	# Database backup to dump-backup folder
+		# Database backup to dump-backup folder
 		pass="Toro_sysad1"
 		backup=$(mysqldump -u root -p$pass --databases important_files > /opt/dump-backup/important_files.sql)
 
@@ -35,13 +35,13 @@
 				rsync -avr /opt/dump-backup /opt/full-backup
 
 		}
-	#if db_backup was done
-	if [ "$backup == 0" ]; then
-		setbackup #calls the backup
-		#notif email
-		sm=$(echo -e 'Subject: DB_Backup\n\nYour database have been backup successfully.' | ssmtp -v toro.exavierace.munar@gmail.com)
+		#if db_backup was done
+		if [ "$backup == 0" ]; then
+			setbackup #calls the backup
+			#notif email
+			sm=$(echo -e 'Subject: DB_Backup\n\nYour database have been backup successfully.' | ssmtp -v toro.exavierace.munar@gmail.com)
 
-		 echo "Success."
-	else
+		echo "Success."
+		else
 		echo "Failed."
-	fi
+		fi
