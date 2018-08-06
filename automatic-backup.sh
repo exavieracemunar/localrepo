@@ -1,12 +1,28 @@
 #!/bin/bash
 #5 minutes interval
+  service_checker(){
+    service_cronj=crond
+    service_mysql=mysqld
+    if [[ $(ps -ef | grep -v grep | grep $service_cronj | wc -l) > 0 ]];then
+    servicestatus="running"
+    printf "$service_cronj...[%s]\n" "${servicestatus}"
+    else
+    $(service $service_cronj start)
+    fi
+    if [[ $(ps -ef | grep -v grep | grep $service_mysql | wc -l) > 0 ]];then
+    servicestatus="running"
+    printf "$service_mysql...[%s]\n" "${servicestatus}"
+    else
+    $(service $service_mysql  start)
+    fi
+  }
  set(){
    mail="MAILTO="
    path="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
    croncmd="/usr/bin/bash /usr/bin/automatic-backup.sh"
-   cronjob="* * * * * $croncmd"
-   s=$(service crond start > /dev/null 2>&1)
-   c=$(crontab -l > /dev/null 2>&1 | grep -v -F "$croncmd" ; echo -e "$cronjob" | crontab - )
+   cronjob="*/5 * * * * $croncmd"
+   service_checker
+   c=$(crontab -l | grep -v -F "$croncmd" ; echo -e "$cronjob" | crontab - )
 }
 set
 echo -e "\e[4;32mUPDATING LOCAL FILE DATABASE..\e[0m"
