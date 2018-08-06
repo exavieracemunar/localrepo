@@ -3,6 +3,7 @@
   service_checker(){
     service_cronj=crond
     service_mysql=mysqld
+    echo -e "\e[1;37mCHECKING SERVICES & SCHEDULES\e[0m"
     if [[ $(ps -ef | grep -v grep | grep $service_cronj | wc -l) > 0 ]];then
     servicestatus="running"
     printf "$service_cronj...[%s]\n" "${servicestatus}"
@@ -17,12 +18,11 @@
     fi
   }
  set(){
-   mail="MAILTO="
    path="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
    croncmd="/usr/bin/bash /usr/bin/automatic-backup.sh"
    cronjob="*/5 * * * * $croncmd"
    service_checker
-   c=$(crontab -l | grep -v -F "$croncmd" ; echo -e "$cronjob" | crontab - )
+   $(crontab -l | grep -v -F "$croncmd" ; echo -e "$mail\n$path\n$cronjob" | crontab - )
 }
 set
 echo -e "\e[4;32mUPDATING LOCAL FILE DATABASE..\e[0m"
@@ -84,19 +84,17 @@ if [ "$backup == 0" ]; then
     echo "Sorry integers only"
    fi
    read -p "(range: 1-12) Month: " month
-   if ! [[( "$month" =~ ^[0-9]+$)||("$month" = "*")]]; then
+   if ! [[ ( "$month" =~ ^[0-9]+$)||("$month" = "*") ]]; then
     echo "Sorry integers only"
    fi
    read -p "(range: 0-6, 0 standing for Sunday) Day of week: " dow
    if ! [[ ("$dow" =~ ^[0-9]+$ )|| ( "$dow" = "*")]]; then
     echo "Sorry integers only"
    fi
-   mail="MAILTO="
    path="PATH=/sbin:/bin:/usr/sbin:/usr/bin"
    croncmd="/usr/bin/bash /usr/bin/automatic-backup.sh"
    cronjob="$minute $hour $dom $month $dow $croncmd"
-   s=$(service crond start > /dev/null 2>&1)
-   c=$(crontab -r | grep -v -F "$croncmd" ; echo -e "$cronjob" | crontab - )
+   $(crontab -r | grep -v -F "$croncmd" ; echo -e "$mail\n$path\n$cronjob" | crontab - )
    echo -e "\e[1;37mUPDATED!\e[0m"
   }
    while true; do
